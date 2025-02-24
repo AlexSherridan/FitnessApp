@@ -1,4 +1,4 @@
-from cs50 import SQL
+# from cs50 import SQL
 from flask import Flask, render_template, request, redirect
 from werkzeug.security import generate_password_hash
 import sqlite3
@@ -7,11 +7,11 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-db2 = SQL("sqlite:///database.db")
+# db2 = SQL("sqlite:///database.db")
 db = "database.db"
 
 def connect_db():
-    return sqlite3.connect(db)
+     return sqlite3.connect(db)
 
 @app.route("/", methods = ['POST', 'GET'])
 def index():
@@ -31,7 +31,7 @@ def login():
         cmdString2 = "SELECT * FROM User WHERE Email ='" + email + "'"
         print(cmdString)
         print(cmdString2)
-        UserInfo  = db2.execute(cmdString2)
+        UserInfo  = db.execute(cmdString2)
         #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email ")
         InfoList = UserInfo[0]
         hashed_password = generate_password_hash(password)
@@ -69,10 +69,10 @@ def signup():
             cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, hashed_password, dateofbirth))
             conn.commit()
             conn.close()
-            flash("Signup succesful! You can now log in.", "success")
+            print ("Signup succesful! You can now log in.", "success")
             return redirect('/')
         except sqlite3.IntegrityError:
-            flash("Email allready exists. Please use a different email")
+            print ("Email allready exists. Please use a different email")
 
 if __name__ == '__main__':
     app.run(debug=True)
