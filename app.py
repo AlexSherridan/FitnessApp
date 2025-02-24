@@ -25,30 +25,43 @@ def login():
     else:
         email = request.form['email']
         password = request.form['password']
+        hashed_password = generate_password_hash(password)
 
         #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email")
-        cmdString = "SELECT * FROM User WHERE Email = email"
-        cmdString2 = "SELECT * FROM User WHERE Email ='" + email + "'"
-        print(cmdString)
-        print(cmdString2)
-        UserInfo  = db.execute(cmdString2)
-        #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email ")
-        InfoList = UserInfo[0]
-        hashed_password = generate_password_hash(password)
-        hashed_password2 = generate_password_hash(password)
-        print("Email: " + email)
-        print (InfoList)
-        print (hashed_password)
-        print (hashed_password2)
-        print (InfoList["Name"])
-        print (InfoList["Surname"])
-        print (InfoList["Password"])
-        if hashed_password == InfoList["Password"]:
-            return 'welcome ' + InfoList["Name"]
-
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
+                    (email, password))
+        row = cursor.fetchall()
+        print (row)
+        if len(row) == 1:
+            return "success"
         else:
-            return 'User not found'
+            return "invalid login"
+        
 
+        # cmdString = "SELECT * FROM User WHERE Email = email"
+        # cmdString2 = "SELECT * FROM User WHERE Email ='" + email + "'"
+        # print(cmdString)
+        # print(cmdString2)
+        #UserInfo  = db.execute(cmdString2)
+        #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email ")
+        #InfoList = UserInfo[0]
+        
+        # hashed_password2 = generate_password_hash(password)
+        # print("Email: " + email)
+        # print (InfoList)
+        # print (hashed_password)
+        # print (hashed_password2)
+        # print (InfoList["Name"])
+        # print (InfoList["Surname"])
+        # print (InfoList["Password"])
+       # if hashed_password == InfoList["Password"]:
+         #   return 'welcome ' + InfoList["Name"]
+
+       # else:
+         #   return 'User not found'
+        
 
 @app.route("/signup", methods = ['POST', 'GET'])
 def signup():
@@ -61,12 +74,12 @@ def signup():
         password = request.form['password']
         dateofbirth = request.form['dob']
 
-        hashed_password = generate_password_hash(password)
+        #hashed_password = generate_password_hash(password)
 
         try:
             conn = connect_db()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, hashed_password, dateofbirth))
+            cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, password, dateofbirth))
             conn.commit()
             conn.close()
             print ("Signup succesful! You can now log in.", "success")
