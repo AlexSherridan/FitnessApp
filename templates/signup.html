@@ -1,7 +1,29 @@
-<form method="POST">
-Username <input name="un"> <br>
-Password <input name="pw" type="password"> <br> 
-Confirm Password <input name="cpw" type="password"> <br> 
-<input type="submit">
-<a href="/">Login</a>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+</head>
+<body>
+    <h2>Signup Page</h2>
+
+
+    <form action="/signup" method="POST">
+        <label>First Name:</label>
+        <input type="text" name="name" required>
+
+        <label>Last Name:</label>
+        <input type="text" name="surname" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <label>Password:</label>
+        <input type="password" name="password" required>
+
+        <label>Date of Birth:</label>
+        <input type="date" name="dob" required>
+
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>
