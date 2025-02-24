@@ -1,6 +1,7 @@
 # from cs50 import SQL
 from flask import Flask, render_template, request, redirect
 from werkzeug.security import generate_password_hash
+from hashlib import sha256
 import sqlite3
 
 
@@ -25,17 +26,20 @@ def login():
     else:
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
+        #hashed_password = generate_password_hash(password)
+        
+        hashed_password = sha256(password.encode('utf-8')).hexdigest()
 
         #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email")
         conn = connect_db()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
-                    (email, password))
+                    (email, hashed_password))
         row = cursor.fetchall()
         print (row)
+        print (hashed_password)
         if len(row) == 1:
-            return "success"
+            return row
         else:
             return "invalid login"
         
@@ -75,11 +79,12 @@ def signup():
         dateofbirth = request.form['dob']
 
         #hashed_password = generate_password_hash(password)
+        hashed_password = sha256(password.encode('utf-8')).hexdigest()
 
         try:
             conn = connect_db()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, password, dateofbirth))
+            cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, hashed_password, dateofbirth))
             conn.commit()
             conn.close()
             print ("Signup succesful! You can now log in.", "success")
