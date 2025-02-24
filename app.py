@@ -1,5 +1,5 @@
 from cs50 import SQL
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect
 from werkzeug.security import generate_password_hash
 import sqlite3
 
