@@ -1,0 +1,11 @@
+body { text-align: center; font-family: Arial, sans-serif; background-color: white; }
+.header { font-size: 36px; font-weight: bold; margin: 20px; }
+.top-buttons { display: flex; justify-content: space-between; padding: 10px; }
+.button { padding: 10px 20px; background-color: rgb(0, 64, 255); color: black; border: none; cursor: pointer; border-radius: 5px; }
+.main-buttons { display: flex; justify-content: center; gap: 80px; margin-top: 250px; }
+.green-button { padding: 20px 50px; background-color: lightgreen; border: none; cursor: pointer; border-radius: 5px; }
+.logo { position: absolute; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; }
+.separator { height: 2px; background-color: black; margin: 20px 0; }
+input {
+    background-color: orange;
+}

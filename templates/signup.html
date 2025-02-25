@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Signup</title>
+    <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
 </head>
 <body>
     <h2>Signup Page</h2>
@@ -13,20 +14,19 @@
     <form action="/signup" method="POST">
         <label>First Name:</label>
         <input type="text" name="name" required>
-
+        <p></p>   
         <label>Last Name:</label>
         <input type="text" name="surname" required>
-
+        <p></p>
         <label>Email:</label>
         <input type="email" name="email" required>
-
+        <p></p>
         <label>Password:</label>
         <input type="password" name="password" required>
-
+        <p></p>
         <label>Date of Birth:</label>
         <input type="date" name="dob" required>
-
-        <button type="submit">Sign Up</button>
+        <p></p>
         <button type="submit" {% if email_exists %}disabled{% endif %}>Sign Up</button>
     </form>
 </body>
