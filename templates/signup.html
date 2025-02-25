@@ -6,6 +6,9 @@
 <body>
     <h2>Signup Page</h2>
 
+    {% if email_exists %}
+        <p style="color: red;">Email already exists! Please use a different email.</p>
+    {% endif %}
 
     <form action="/signup" method="POST">
         <label>First Name:</label>
@@ -24,6 +27,7 @@
         <input type="date" name="dob" required>
 
         <button type="submit">Sign Up</button>
+        <button type="submit" {% if email_exists %}disabled{% endif %}>Sign Up</button>
     </form>
 </body>
 </html>

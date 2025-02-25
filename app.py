@@ -1,14 +1,12 @@
-# from cs50 import SQL
 from flask import Flask, render_template, request, redirect
 from werkzeug.security import generate_password_hash
 from hashlib import sha256
-import sqlite3
+import sqlite3 
 
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# db2 = SQL("sqlite:///database.db")
 db = "database.db"
 
 def connect_db():
@@ -18,7 +16,6 @@ def connect_db():
 def index():
         return render_template('index.html')
 
-
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     if request.method == 'GET':
@@ -26,11 +23,9 @@ def login():
     else:
         email = request.form['email']
         password = request.form['password']
-        #hashed_password = generate_password_hash(password)
-        
+       
         hashed_password = sha256(password.encode('utf-8')).hexdigest()
 
-        #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email")
         conn = connect_db()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
@@ -44,29 +39,6 @@ def login():
             return "invalid login"
         
 
-        # cmdString = "SELECT * FROM User WHERE Email = email"
-        # cmdString2 = "SELECT * FROM User WHERE Email ='" + email + "'"
-        # print(cmdString)
-        # print(cmdString2)
-        #UserInfo  = db.execute(cmdString2)
-        #UserInfo  = db2.execute("SELECT * FROM User WHERE Email = email ")
-        #InfoList = UserInfo[0]
-        
-        # hashed_password2 = generate_password_hash(password)
-        # print("Email: " + email)
-        # print (InfoList)
-        # print (hashed_password)
-        # print (hashed_password2)
-        # print (InfoList["Name"])
-        # print (InfoList["Surname"])
-        # print (InfoList["Password"])
-       # if hashed_password == InfoList["Password"]:
-         #   return 'welcome ' + InfoList["Name"]
-
-       # else:
-         #   return 'User not found'
-        
-
 @app.route("/signup", methods = ['POST', 'GET'])
 def signup():
     if request.method == 'GET':
@@ -78,12 +50,20 @@ def signup():
         password = request.form['password']
         dateofbirth = request.form['dob']
 
-        #hashed_password = generate_password_hash(password)
+        
         hashed_password = sha256(password.encode('utf-8')).hexdigest()
 
         try:
             conn = connect_db()
             cursor = conn.cursor()
+            
+            cursor.execute("SELECT * FROM User WHERE Email=?", (email,))
+            existing_user = cursor.fetchone()
+            
+            if existing_user:
+                conn.close()
+                return render_template('signup.html', email_exists=True, email=email)
+            
             cursor.execute("INSERT INTO User (Name, Surname, Email, Password, DateOfBirth) VALUES (?, ?, ?, ?, ?)",(name, surname, email, hashed_password, dateofbirth))
             conn.commit()
             conn.close()
@@ -91,6 +71,22 @@ def signup():
             return redirect('/')
         except sqlite3.IntegrityError:
             print ("Email allready exists. Please use a different email")
+
+# @app.route("/check_email", methods=['POST'])
+# def check_email():
+#     email = request.json.get("email")  # Get email from frontend
+    
+#     conn = connect_db()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM User WHERE Email=?", (email,))
+#     existing_user = cursor.fetchone()
+#     conn.close()
+    
+#     if existing_user:
+#         return jsonify({"exists": True})  # Send response to frontend
+#     else:
+#         return jsonify({"exists": False})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
