@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Fitness-4-U</title>
         <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
     </head>
@@ -11,21 +9,23 @@
             <div class="top-buttons">
                 <button class="button">Settings</button>
                 <div class="header">Fitness-4-U</div>
-
                 <a href= "{{ url_for('login') }}">
-                <button class="button">Login</button>
-            </a>
-
+                    <button class="button">Login</button>
+                </a>
             </div>
+            
             <div class="separator"></div>
-            <rundiv class="main-buttons">
-                <button class="green-button">Progress</button>
+            
+            <div class="main-buttons">
+                <a href= "{{ url_for('progress') }}">
+                    <button class="green-button">Progress</button>
+                </a>
                 <button class="green-button">Food Diary</button>
                 <button class="green-button">Create Workout</button>
             </div>
+            
             <div class="logo"><img src="/static/Logo.jpg" alt="running man logo" width = 125px, height = 125px></div>
         </div>
     </body>
 </html>
 
-<!--.container { width: 80%; margin: auto; padding: 20px; border: 2px solid black; border-radius: 20px; margin-top: 50px;-->

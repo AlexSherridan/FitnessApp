@@ -5,16 +5,28 @@
         <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
     </head>
     <body>
-        <form method="post">
-            email: <input name="email"> <br>
-            password: <input name="password" type="password"> <br>
-            <input type="submit">
-        </form>
-        <a href= "{{ url_for('index') }}">
-            <button class="button">Home</button>
-        </a>
-        <a href= "{{ url_for('signup') }}">
-            <button class="button">Signup</button>
-        </a>
+        <div class = "container">
+            <div class = "top-buttons">
+                <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button>
+                </a>
+                <div class="header">Login</div>
+            </div>
+            
+            <div class="separator"></div>
+
+            <form method="post">
+                email: <input name="email"> <br>
+                password: <input name="password" type="password"> <br>
+                <input type="submit">
+            </form>
+            <!-- <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button> -->
+            
+            </a>
+            <a href= "{{ url_for('signup') }}">
+                <button class="button">Signup</button>
+            </a>
+        </div>
     </body>
 </html>
