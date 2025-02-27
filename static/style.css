@@ -6,6 +6,7 @@ body { text-align: center; font-family: Arial, sans-serif; background-color: whi
 .green-button { padding: 20px 50px; background-color: lightgreen; border: none; cursor: pointer; border-radius: 5px; }
 .logo { position: absolute; bottom: 20px; right: 20px; padding: 10px; border-radius: 5px; }
 .separator { height: 2px; background-color: black; margin: 20px 0; }
+.orange-button {font-size: 36px; font-weight: normal; padding: 50px 100px; background-color: rgb(248, 211, 109); border: none; cursor: pointer; border-radius: 5px; }
 input {
-    background-color: orange;
+    background-color: rgb(248, 211, 109);
 }
