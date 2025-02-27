@@ -72,21 +72,10 @@ def signup():
         except sqlite3.IntegrityError:
             print ("Email allready exists. Please use a different email")
 
-# @app.route("/check_email", methods=['POST'])
-# def check_email():
-#     email = request.json.get("email")  # Get email from frontend
-    
-#     conn = connect_db()
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT * FROM User WHERE Email=?", (email,))
-#     existing_user = cursor.fetchone()
-#     conn.close()
-    
-#     if existing_user:
-#         return jsonify({"exists": True})  # Send response to frontend
-#     else:
-#         return jsonify({"exists": False})
 
+@app.route("/progress")
+def progress():
+        return render_template('progress.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
