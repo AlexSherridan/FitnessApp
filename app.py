@@ -22,36 +22,44 @@ def connect_db():
 def index():
         print("Rendering index page")
         if request.method == 'GET':
-            return render_template('index.html', email= session.get("email"))  
+            return render_template('index.html', USER_ID = session.get("email"))  
 
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
-    if request.method == 'GET': f
+    if request.method == 'GET':
         return render_template('login.html')
     else:
         email = request.form['email']
         password = request.form['password']
        
-        session["email"] = request.form.get("email")
+        #session["email"] = request.form.get("email")
 
         hashed_password = sha256(password.encode('utf-8')).hexdigest() 
 
-        # conn = connect_db()
-        # cursor = conn.cursor()
-        # cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
-        #             (email, hashed_password))
-        # row = cursor.fetchall()
-    
-        # if len(row) == 1:
+        #print("Session data after login:", session)
+
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
+                     (email, hashed_password))
+        row = cursor.fetchall()
+
+        print("database data", email, hashed_password)
+
+        if len(row) == 1:
             
-            # session['user_id'] = row[0][0]
-            # session['name'] = row[0][1]
-        print("Session data after login:", session) 
+            session['user_id'] = row[0][0]
+            session['name'] = row[0][1]
+            session['surname'] = row[0][2]
+            session['email'] = row[0][3]
+            session['dateofbirth'] = row[0][5]
             
-        return redirect("/")    
+            print("Session data after login:", session)
+
+            return redirect("/")    
         
-        # else:
-        #     return "invalid login"
+        else:
+            return redirect("/login")
         
 @app.route("/signup", methods = ['POST', 'GET'])
 def signup():
@@ -107,13 +115,21 @@ def calorieEntering():
         conn = connect_db()
         cursor = conn.cursor()
         
-        cursor.execute("INSERT INTO calorieIntake (Calorie, DateCalorieIn) VALUES (?, ?)", (calories, date))
-        conn.commit()  
+        USER_ID = session.get("user_id")
+
+        #cursor.execute("INSERT INTO calorieIntake (Calorie, DateCalorieIn) VALUES (?, ?)", (calories, date))
+        cursor.execute("INSERT INTO calorieIntake (USER_ID, Calorie, DateCalorieIn) VALUES (?, ?, ?)", (USER_ID, calories, date))
+
+        conn.commit()
         conn.close()  
         print ("Calories succesfully logged.", "success")
         return redirect('/')
     
-    
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run(debug=True) 
