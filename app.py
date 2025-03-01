@@ -116,7 +116,7 @@ def calorieEntering():
         cursor = conn.cursor()
         
         USER_ID = session.get("user_id")
-
+ff...f.f.
         #cursor.execute("INSERT INTO calorieIntake (Calorie, DateCalorieIn) VALUES (?, ?)", (calories, date))
         cursor.execute("INSERT INTO calorieIntake (USER_ID, Calorie, DateCalorieIn) VALUES (?, ?, ?)", (USER_ID, calories, date))
 
@@ -125,7 +125,7 @@ def calorieEntering():
         print ("Calories succesfully logged.", "success")
         return redirect('/')
     
-ss
+
 @app.route("/logout")
 def logout(): 
     session.clear()
