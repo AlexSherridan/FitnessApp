@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect
-from werkzeug.security import generate_password_hash
 from hashlib import sha256
 import sqlite3 
 
@@ -78,6 +77,6 @@ def progress():
         return render_template('progress.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) f
 
 
