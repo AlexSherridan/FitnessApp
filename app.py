@@ -125,9 +125,9 @@ def calorieEntering():
         print ("Calories succesfully logged.", "success")
         return redirect('/')
     
-
+ss
 @app.route("/logout")
-def logout():
+def logout(): 
     session.clear()
     return redirect("/")
 
