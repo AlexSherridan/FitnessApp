@@ -1,10 +1,17 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
+from flask_session import Session
 from hashlib import sha256
 import sqlite3 
 
-
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+
+# Configure session
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+
+app.secret_key = 'your_secret_key'
 
 db = "database.db"
 
@@ -13,31 +20,39 @@ def connect_db():
 
 @app.route("/", methods = ['POST', 'GET'])
 def index():
-        return render_template('index.html')
+        print("Rendering index page")
+        if request.method == 'GET':
+            return render_template('index.html', email= session.get("email"))  
 
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
-    if request.method == 'GET':
+    if request.method == 'GET': f
         return render_template('login.html')
     else:
         email = request.form['email']
         password = request.form['password']
        
-        hashed_password = sha256(password.encode('utf-8')).hexdigest()
+        session["email"] = request.form.get("email")
 
-        conn = connect_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
-                    (email, hashed_password))
-        row = cursor.fetchall()
-        print (row)
-        print (hashed_password)
-        if len(row) == 1:
-            return row
-        else:
-            return "invalid login"
+        hashed_password = sha256(password.encode('utf-8')).hexdigest() 
+
+        # conn = connect_db()
+        # cursor = conn.cursor()
+        # cursor.execute("SELECT * FROM User WHERE Email=? AND Password=?",
+        #             (email, hashed_password))
+        # row = cursor.fetchall()
+    
+        # if len(row) == 1:
+            
+            # session['user_id'] = row[0][0]
+            # session['name'] = row[0][1]
+        print("Session data after login:", session) 
+            
+        return redirect("/")    
         
-
+        # else:
+        #     return "invalid login"
+        
 @app.route("/signup", methods = ['POST', 'GET'])
 def signup():
     if request.method == 'GET':
@@ -51,7 +66,7 @@ def signup():
 
         
         hashed_password = sha256(password.encode('utf-8')).hexdigest()
-
+        
         try:
             conn = connect_db()
             cursor = conn.cursor()
@@ -76,7 +91,31 @@ def signup():
 def progress():
         return render_template('progress.html')
 
+@app.route("/calorieTracking")
+def calorieTracking():
+        return render_template('calorieTracking.html')
+
+@app.route("/calorieEntering", methods = ['POST', 'GET'])
+def calorieEntering():
+    if request.method == 'GET':
+        return render_template('calorieEntering.html')
+    
+    else:
+        calories = request.form['calories']
+        date = request.form['date']
+
+        conn = connect_db()
+        cursor = conn.cursor()
+        
+        cursor.execute("INSERT INTO calorieIntake (Calorie, DateCalorieIn) VALUES (?, ?)", (calories, date))
+        conn.commit()  
+        conn.close()  
+        print ("Calories succesfully logged.", "success")
+        return redirect('/')
+    
+    
+
 if __name__ == '__main__':
-    app.run(debug=True) f
+    app.run(debug=True) 
 
 

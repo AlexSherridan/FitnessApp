@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calorie Tracking</title>
+        <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
+    </head>
+    
+    <body>
+        <div class="container">
+            <div class = "top-buttons">
+                <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button>
+                </a>
+                <div class="header">Calorie Tracking</div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <form action="/calorieEntering" method="POST">
+                <label>Amount of Calories:</label>
+                <input type="integer" name="calories" required>
+                <p></p>   
+                <label>Date:</label>
+                <input type="date" name="date" required>
+                <p></p>
+                
+                <button type="submit" {% if email_exists %}disabled{% endif %}>Confirm</button>
+            </form>
+
+            <div id="myPlot" style="width:100%;max-width:700px"></div>
+
+            <div class="main-buttons">
+                <button class="orange-button">Calorie entering</button>
+                <a href= "{{ url_for('index') }}">
+                    <button class="button">Home</button>
+                    </a>
+            </div>
+        </div>
+    </body>

@@ -3,6 +3,7 @@
     <head>
         <title>Calorie Tracking</title>
         <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     
     <body>
@@ -16,11 +17,26 @@
             
             <div class="separator"></div>
 
+            <div id="myPlot" style="width:100%;max-width:700px"></div>
+
+            <script>
+            const data = [{
+            x:["Italy", "France", "Spain", "USA", "Argentina"],
+            y:[55, 49, 44, 24, 15],
+            type:"line",
+            marker: {color:"blue"}
+            }];
+
+            const layout = {title:"Calorie history"};
+            Plotly.newPlot("myPlot", data, layout);
+            </script>
             <div class="main-buttons">
-                <a href= "{{ url_for('progress') }}">
-                    <button class="orange-button">Calorie Tracking</button>
+                <a href= "{{ url_for('calorieEntering') }}">
+                <button class="orange-button">Calorie entering</button>
                 </a>
-                <button class="orange-button">Weight Tracking</button>
+                <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button>
+                </a>
             </div>
         </div>
     </body>
