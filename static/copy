@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calorie Tracking</title>
+        <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
+        <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+    </head>
+    
+    <body>
+        <div class="container">
+            <div class = "top-buttons">
+                <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button>
+                </a>
+                <div class="header">Calorie Tracking</div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <!--Added graph to display user calorie data-->
+            <div id="myPlot" style="width:100%;max-width:700px"></div>
+
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script>
+            //Dates in ISO format
+            const xArray = [
+              "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", 
+              "2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08", 
+              "2024-01-09", "2024-01-10", "2024-01-11"
+            ]; 
+            
+            // Define Data
+            const yArray = [3213,1075,6502,2445,2987,4563,5765,9132,1245,4132,7812];
+            
+            const data = [{
+              x: xArray, // Using dates for x-axis
+              y: yArray,
+              mode: "lines" // Graph is line segments joining data points
+            }];
+            
+            // Define Layout
+            const layout = {
+              xaxis: {
+                title: "Date",
+                type: "date" // Ensure the axis is treated as dates
+              },
+              yaxis: {
+                range: [0, 10000],
+                title: "Calories"
+              },
+              title: "Calorie tracker"
+            };
+            
+            // Display using Plotly library
+            Plotly.newPlot("myPlot", data, layout);
+            </script>
+            
+
+            <div class="main-buttons">
+                <a href= "{{ url_for('calorieEntering') }}">
+                <button class="orange-button">Calorie entering</button>
+                </a>
+                <a href= "{{ url_for('index') }}">
+                <button class="button">Home</button>
+                </a>
+            </div>
+        </div>
+    </body>

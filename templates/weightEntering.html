@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Calorie Entering</title>
+        <title>Weight Entering</title>
         <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
     </head>
     
@@ -11,14 +11,14 @@
                 <a href= "{{ url_for('index') }}">
                 <button class="button">Home</button>
                 </a>
-                <div class="header">Calorie Entering</div>
+                <div class="header">Weight Entering</div>
             </div>
             
             <div class="separator"></div>
             
-            <form action="/calorieEntering" method="POST">
-                <label>Amount of Calories:</label>
-                <input type="integer" name="calories" required>
+            <form action="/weightEntering" method="POST">
+                <label>Weight:</label>
+                <input type="integer" name="weight" required>
                 <p></p>   
                 <label>Date:</label>
                 <input type="date" name="date" required>

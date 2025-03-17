@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Workout - Fitness-4-U</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Basic styles to help visualize the drag-and-drop areas */
+        #exerciseList, .dropzone {
+            border: 2px dashed #aaa;
+            padding: 10px;
+            margin: 10px;
+            min-height: 150px;
+        }
+        .exercise {
+            background: #eee;
+            margin: 5px;
+            padding: 5px;
+            cursor: grab;
+        }
+        .dropped {
+            border: 1px solid #ccc;
+            margin: 5px;
+            padding: 5px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Workout</h1>
+        <div id="exerciseList">
+            <h3>Available Exercises</h3>
+            <div class="exercise" draggable="true" data-exercise="Push-ups">Push-ups</div>
+            <div class="exercise" draggable="true" data-exercise="Squats">Squats</div>
+            <div class="exercise" draggable="true" data-exercise="Deadlifts">Deadlifts</div>
+            <div class="exercise" draggable="true" data-exercise="Pull-ups">Pull-ups</div>
+            <div class="exercise" draggable="true" data-exercise="Bench Press">Bench Press</div>
+            <div class="exercise" draggable="true" data-exercise="Lunges">Lunges</div>
+            <div class="exercise" draggable="true" data-exercise="Shoulder Press">Shoulder Press</div>
+        </div>
+        <div id="workoutZones">
+            <div id="workoutOne" class="dropzone" data-slot="Workout One">
+                <h3>Workout One</h3>
+            </div>
+            <div id="workoutTwo" class="dropzone" data-slot="Workout Two">
+                <h3>Workout Two</h3>
+            </div>
+        </div>
+        <button onclick="saveWorkout()">Save Workout</button>
+    </div>
+
+    <script>
+        // Enable dragging on available exercises
+        const exercises = document.querySelectorAll('.exercise');
+        exercises.forEach(exercise => {
+            exercise.addEventListener('dragstart', dragStart);
+        });
+
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain", e.target.getAttribute("data-exercise"));
+        }
+
+        // Setup dropzones for Workout One and Workout Two
+        const dropzones = document.querySelectorAll('.dropzone');
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragover', dragOver);
+            zone.addEventListener('drop', drop);
+        });
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const exerciseName = e.dataTransfer.getData("text/plain");
+            // Create a container for the dropped exercise
+            const exerciseDiv = document.createElement("div");
+            exerciseDiv.classList.add("dropped");
+            exerciseDiv.innerHTML = `
+                <span>${exerciseName}</span> 
+                Reps: <input type="number" min="1" value="10" style="width:60px;">
+                <button onclick="removeExercise(this)">Remove</button>
+            `;
+            e.target.appendChild(exerciseDiv);
+        }
+
+        function removeExercise(button) {
+            // Remove the parent element (the dropped exercise container)
+            button.parentElement.remove();
+        }
+
+        // Save Workout: Collect data from both dropzones and send via fetch to /saveWorkout
+        function saveWorkout() {
+            const workoutData = {};
+            dropzones.forEach(zone => {
+                const slot = zone.getAttribute("data-slot");
+                workoutData[slot] = [];
+                const droppedExercises = zone.querySelectorAll(".dropped");
+                droppedExercises.forEach(div => {
+                    const exerciseName = div.querySelector("span").innerText;
+                    const reps = parseInt(div.querySelector("input").value);
+                    workoutData[slot].push({
+                        exercise: exerciseName,
+                        reps: reps
+                    });
+                });
+            });
+
+            // Prepare data in expected JSON format
+            const payload = {
+                workouts: workoutData
+            };
+
+            // Send the data to the backend
+            fetch("/saveWorkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Workout saved successfully!");
+                    // Optionally, redirect or clear the dropzones
+                } else {
+                    alert("Error saving workout: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while saving the workout.");
+            });
+        }
+                // Fetch saved workouts when the page loads
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/getWorkout")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        loadSavedWorkouts(data.workouts);
+                    } else {
+                        console.error("Error fetching workouts:", data.message);
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        function loadSavedWorkouts(workouts) {
+            const dropzones = {
+                "Workout One": document.getElementById("workoutOne"),
+                "Workout Two": document.getElementById("workoutTwo")
+            };
+
+            // Populate each workout slot with saved workouts
+            Object.keys(workouts).forEach(slot => {
+                workouts[slot].forEach(workout => {
+                    const exerciseDiv = document.createElement("div");
+                    exerciseDiv.classList.add("dropped");
+                    exerciseDiv.innerHTML = `
+                        <span>${workout.exercise}</span> 
+                        Reps: <input type="number" min="1" value="${workout.reps}" style="width:60px;">
+                        <button onclick="removeExercise(this)">Remove</button>
+                    `;
+                    dropzones[slot].appendChild(exerciseDiv);
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
+

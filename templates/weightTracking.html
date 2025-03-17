@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calorie Tracking</title>
+    <title>Weight Tracking</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
@@ -12,19 +12,19 @@
             <a href="{{ url_for('index') }}">
                 <button class="button">Home</button>
             </a>
-            <div class="header">Calorie Tracking</div>
+            <div class="header">Weight Tracking</div>
         </div>
 
         <div class="separator"></div>
 
-        <!-- Graph to display user calorie data -->
+        <!-- Graph to display user Weight data -->
         <div id="myPlot" style="width:100%;max-width:700px"></div>
 
         <script>
             // Triggering an event when you get data from database
             document.addEventListener("DOMContentLoaded", function () {
-                // Fetch calorie data from Flask backend
-                fetch('/calorie-data')
+                // Fetch weight data from Flask backend
+                fetch('/weight-data')
                     .then(response => response.json())
                     .then(data => {
                         // This prints a message to the user as an alert if no data is available yet
@@ -35,7 +35,7 @@
 
                         // This is putting the users retrieved data from the db into the graph arrays
                         const xArray = data.map(entry => entry.date);
-                        const yArray = data.map(entry => entry.calories);
+                        const yArray = data.map(entry => entry.weight);
 
                         // Define Data
                         const plotData = [{
@@ -59,10 +59,10 @@
                             },
                             yaxis: {
                                 // Adjust max range dynamically
-                                range: [0, Math.max(...yArray) + 500],  
-                                title: "Calories"
+                                range: [0, Math.max(...yArray) + 20],  
+                                title: "Weight"
                             },
-                            title: "Calorie Tracker"
+                            title: "Weight Tracker"
                         };
 
                         // Display using Plotly
@@ -72,8 +72,8 @@
         </script>
 
         <div class="main-buttons">
-            <a href="{{ url_for('calorieEntering') }}">
-                <button class="orange-button">Calorie Entering</button>
+            <a href="{{ url_for('weightEntering') }}">
+                <button class="orange-button">Weight Entering</button>
             </a>
         </div>
     </div>
